@@ -9,7 +9,9 @@ app = Flask(__name__)
 #socketio = SocketIO(app, cors_allowed_origins="https://text-share.project-kk.com")
 
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")  # async_mode="threading"を指定
+
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
