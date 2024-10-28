@@ -19,8 +19,11 @@
 
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script>
-        const socket = io({
-            transports: ['websocket', 'polling']
+        //const socket = io({
+            //transports: ['websocket', 'polling']
+        //});
+        const socket = io('https://text-share.project-kk.com', {
+            transports: ['polling']  // WebSocketからpollingに切り替え
         });
 
         // テキストエリアの変更を検知し、サーバーに送信
