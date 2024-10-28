@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>WebSocket Test</title>
 </head>
-
 <body>
     <h2>WebSocket Test</h2>
     <button onclick="sendMessage()">Send Message</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script type="text/javascript">
         const socket = io("https://text-share.project-kk.com", {
-            transports: ["polling"]
+            transports: ["polling"],  // ポーリングのみに限定
+            withCredentials: true      // CORS対応
         });
 
-
         socket.on("connect", () => {
-            console.log("Connected to WebSocket server");
+            console.log("Connected to WebSocket server via polling");
         });
 
         socket.on("message", (data) => {
@@ -25,7 +23,7 @@
         });
 
         socket.on("disconnect", () => {
-            console.log("Disconnected from server");
+            console.log("Disconnected from server❣");
         });
 
         function sendMessage() {
@@ -33,5 +31,4 @@
         }
     </script>
 </body>
-
 </html>

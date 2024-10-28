@@ -3,16 +3,8 @@ from flask_socketio import SocketIO, emit, send
 from flask_cors import CORS
 
 app = Flask(__name__)
-#CORS(app, resources={r"/*": {"origins": "https://text-share.project-kk.com"}})
-
-# Socket.IOのCORSをHTTPSオリジンで制限
-#socketio = SocketIO(app, cors_allowed_origins="https://text-share.project-kk.com")
-
-
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")  # async_mode="threading"を指定
-
-
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/')
@@ -22,7 +14,6 @@ def index():
 @socketio.on('text_change')
 def handle_text_change(data):
     emit('update_text', data, broadcast=True)
-
 
 @app.route('/test')
 def test():
@@ -34,4 +25,4 @@ def handle_message(message):
     send(f"Echo: {message}")
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True) 
+    socketio.run(app, debug=True, port=5000)
