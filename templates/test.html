@@ -12,7 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script type="text/javascript">
         const socket = io("https://text-share.project-kk.com", {
-            transports: ["polling"],
             httpCompression: false,  // 圧縮を無効化
             withCredentials: true    // CORS対応
         });
@@ -27,7 +26,7 @@
         });
 
         socket.on("disconnect", () => {
-            console.log("Disconnected from server❣");
+            console.log("Disconnected from server＋＋＋＋＋＋＋＋＋＋＋＋＋");
         });
 
         function sendMessage() {
