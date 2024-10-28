@@ -3,9 +3,10 @@ from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+CORS(app, resources={r"/*": {"origins": "https://text-share.project-kk.com"}})
 
-CORS(app, resources={r"/*": {"origins": "*"}})
+# Socket.IOのCORSをHTTPSオリジンで制限
+socketio = SocketIO(app, cors_allowed_origins="https://text-share.project-kk.com")
 
 @app.route('/')
 def index():
@@ -16,4 +17,4 @@ def handle_text_change(data):
     emit('update_text', data, broadcast=True)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=False, allow_unsafe_werkzeug=True)  # デバッグを無効にし、WebSocket接続を安定させる
