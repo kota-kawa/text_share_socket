@@ -8,7 +8,8 @@ app = Flask(__name__)
 # Socket.IOのCORSをHTTPSオリジンで制限
 #socketio = SocketIO(app, cors_allowed_origins="https://text-share.project-kk.com")
 
-socketio = SocketIO(app)
+
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
