@@ -17,6 +17,7 @@
 *.zip
 *.pptx
 *ssh*
+*.gitattributes
 
 gitoken.txt
 env.txt
