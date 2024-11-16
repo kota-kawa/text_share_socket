@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync Text Area</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #e9f7ef; /* 薄緑の背景色 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-left: 5px solid #d4edda; /* 左の薄緑のライン */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #28a745; /* 見出しに薄緑の色 */
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            font-size: 16px;
+            resize: none;
+            border-color: #d4edda; /* 薄緑のボーダー */
+        }
+        .footer-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center mb-4">Text Sync Service</h1>
+    <textarea id="syncTextarea" class="form-control" placeholder="Type here..."></textarea>
+    <div class="footer-text">
+        Text is synced in real-time. Type freely and see updates shared with others.
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let isTyping = false;
+
+    // テキストをサーバーに送信
+    function sendText(text) {
+        fetch('/text_change', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: text })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Text updated:', data);
+        });
+    }
+
+    // サーバーからテキストを取得
+    function getText() {
+        if (!isTyping) {  // 入力中でない場合のみテキストを取得
+            fetch('/get_text')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('syncTextarea').value = data.text;
+                });
+        }
+    }
+
+    // テキストエリアの変更を検知して送信
+    var textarea = document.getElementById('syncTextarea');
+    textarea.addEventListener('input', function() {
+        isTyping = true; // 入力中フラグをオン
+        sendText(textarea.value);
+    });
+
+    // 入力が終わったらフラグをオフにする
+    textarea.addEventListener('blur', function() {
+        isTyping = false;
+    });
+
+    // 定期的にサーバーからテキストを取得（例：1秒ごと）
+    setInterval(getText, 1000);
+</script>
+</body>
+</html>

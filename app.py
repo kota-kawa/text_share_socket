@@ -1,28 +1,27 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit, send
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+# テキストを保存する変数
+shared_text = ""
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('text_share.html')
 
-@socketio.on('text_change')
-def handle_text_change(data):
-    emit('update_text', data, broadcast=True)
+@app.route('/text_change', methods=['POST'])
+def handle_text_change():
+    global shared_text
+    data = request.json
+    shared_text = data.get('text', '')
+    return jsonify({'status': 'Text updated', 'text': shared_text})
 
-@app.route('/test')
-def test():
-    return render_template('test.html')
-
-@socketio.on('message')
-def handle_message(message):
-    print('Received message:', message)
-    send(f"Echo: {message}")
+@app.route('/get_text', methods=['GET'])
+def get_text():
+    return jsonify({'text': shared_text})
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
