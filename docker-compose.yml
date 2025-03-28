@@ -1,12 +1,8 @@
-version: '3.8'
-
 services:
-  flask-app:
+  web:
     build: .
     ports:
-      - "5000:5000"
+      - "5004:5004"
+    # 必要に応じてボリュームマウント（例: ローカルのコード変更を反映させる場合）
     volumes:
       - .:/app
-    environment:
-      - FLASK_ENV=development
-    command: python app.py
